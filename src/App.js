@@ -5,17 +5,25 @@ import Webcam from "react-webcam";
 import "./App.css";
 import { drawHand } from "./utilities";
 import * as fp from "fingerpose";
-import { rockGesture } from "./rock";
+//Import Images
 import thumbs_up from "./Emojis/thumbs_up.png";
 import victory from "./Emojis/victory.png";
-import rockhand from "./Emojis/rockhand.jpg";
+import stop_hand from "./Emojis/stop_hand.png";
+import thumbs_down from "./Emojis/thumbs_down.png"
+import raised_fist from "./Emojis/raised_fist.png"
+//Import Gestures 
+import { rockhandGesture } from "./rockhand";
+import { thumbsDownGesture } from "./thumbsdown";
+import { stophandGesture } from "./stophand";
+import { raisedfisthandGesture } from "./raised_fist";
+
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
   const [emoji, setEmoji] = useState(null);
-  const images = {thumbs_up:thumbs_up, victory:victory, rockhand: rockhand};
+  const images = {thumbs_up:thumbs_up, victory:victory, stop_hand:stop_hand, thumbs_down:thumbs_down, raised_fist:raised_fist};
 
   const runHandPose = async () => {
     const net = await handpose.load();
@@ -49,14 +57,15 @@ function App() {
 
       //Detect hand
       const hand = await net.estimateHands(video);
-      console.log(hand);
 
       // Detect gesture
       if(hand.length > 0){
         const GE = new fp.GestureEstimator([
           fp.Gestures.VictoryGesture,
           fp.Gestures.ThumbsUpGesture,
-          rockGesture
+          thumbsDownGesture,
+          stophandGesture,
+          raisedfisthandGesture
         ]);
 
         const gesture = await GE.estimate(hand[0].landmarks, 8);
